@@ -1,9 +1,6 @@
 package com.hissar.dpmusic.app;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,39 +51,6 @@ public class MainActivity extends Activity implements
         .beginTransaction()
         .add(clipboardFragment, CLIPBOARD_FRAGMENT_TAG)
         .commit();
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-
-//    testClipboardData();
-  }
-
-  private void testClipboardData() {
-    ClipboardManager clipboardManager = (ClipboardManager)
-        getSystemService(Context.CLIPBOARD_SERVICE);
-    /**
-     D/akshay  (27943): hasPrimaryClip = true
-     D/akshay  (27943): clipData = ClipData { text/plain "Spotify Link" {T:http://open.spotify.com/track/32OlwWuMpZ6b0aN2RZOeMS} }
-     D/akshay  (27943): description = ClipDescription { text/plain "Spotify Link" }
-     D/akshay  (27943): mimeType = text/plain
-     D/akshay  (27943): label = Spotify Link
-     D/akshay  (28916): item = ClipData.Item { T:http://open.spotify.com/track/32OlwWuMpZ6b0aN2RZOeMS }
-     D/akshay  (28916): itemText = http://open.spotify.com/track/32OlwWuMpZ6b0aN2RZOeMS
-     */
-
-    Log.d("akshay", "hasPrimaryClip = " + clipboardManager.hasPrimaryClip());
-
-    if (clipboardManager.hasPrimaryClip()) {
-      ClipData clipData = clipboardManager.getPrimaryClip();
-      Log.d("akshay", "clipData = " + clipData);
-      Log.d("akshay", "description = " + clipboardManager.getPrimaryClipDescription());
-      Log.d("akshay", "mimeType = " + clipboardManager.getPrimaryClipDescription().getMimeType(0));
-      Log.d("akshay", "label = " + clipboardManager.getPrimaryClipDescription().getLabel());
-      Log.d("akshay", "item = " + clipData.getItemAt(0));
-      Log.d("akshay", "itemText = " + clipData.getItemAt(0).getText());
-    }
   }
 
   @Override

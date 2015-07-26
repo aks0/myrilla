@@ -1,4 +1,4 @@
-package com.hissar.dpmusic.app;
+package com.hissar.myrilla.app;
 
 import android.app.ListFragment;
 import android.os.Bundle;
@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * Created by akshayk on 7/26/15.
  */
-public class DPMusicListFragment extends ListFragment {
+public class MyrillaListFragment extends ListFragment {
 
-  private DPMusicListAdapter mDPMusicListAdapter;
+  private MyrillaListAdapter mMyrillaListAdapter;
   private List<MusicItem> mMusicItemList;
 
   @Override
@@ -24,7 +24,7 @@ public class DPMusicListFragment extends ListFragment {
       LayoutInflater inflater,
       ViewGroup container,
       Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.dpmusic_list_fragment, container, false);
+    return inflater.inflate(R.layout.myrilla_list_fragment, container, false);
   }
 
   @Override
@@ -36,10 +36,10 @@ public class DPMusicListFragment extends ListFragment {
     mMusicItemList.add(new MusicItem("item 2", "track 2"));
     mMusicItemList.add(new MusicItem("item 3", "track 3"));
 
-    mDPMusicListAdapter = new DPMusicListAdapter(getActivity());
-    mDPMusicListAdapter.setItemList(mMusicItemList);
+    mMyrillaListAdapter = new MyrillaListAdapter(getActivity());
+    mMyrillaListAdapter.setItemList(mMusicItemList);
 
-    setListAdapter(mDPMusicListAdapter);
+    setListAdapter(mMyrillaListAdapter);
   }
 
   @Override

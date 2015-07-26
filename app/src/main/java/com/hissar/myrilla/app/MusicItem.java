@@ -1,4 +1,4 @@
-package com.hissar.dpmusic.app;
+package com.hissar.myrilla.app;
 
 /**
  * Created by akshayk on 7/26/15.

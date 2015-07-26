@@ -1,4 +1,4 @@
-package com.hissar.dpmusic.app;
+package com.hissar.myrilla.app;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

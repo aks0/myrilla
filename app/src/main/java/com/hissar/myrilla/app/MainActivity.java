@@ -1,4 +1,4 @@
-package com.hissar.dpmusic.app;
+package com.hissar.myrilla.app;
 
 import android.app.Activity;
 import android.content.Intent;

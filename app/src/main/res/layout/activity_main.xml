@@ -11,7 +11,7 @@
     >
 
   <fragment
-      android:name="com.hissar.dpmusic.app.DPMusicListFragment"
+      android:name="com.hissar.myrilla.app.MyrillaListFragment"
       android:id="@+id/dpmusic_list_fragment"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

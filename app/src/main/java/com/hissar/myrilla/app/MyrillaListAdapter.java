@@ -1,4 +1,4 @@
-package com.hissar.dpmusic.app;
+package com.hissar.myrilla.app;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,13 +13,13 @@ import java.util.List;
 /**
  * Created by akshayk on 7/26/15.
  */
-public class DPMusicListAdapter extends BaseAdapter {
+public class MyrillaListAdapter extends BaseAdapter {
 
   private final Context mContext;
 
   private List<MusicItem> mItemList = new ArrayList<MusicItem>();
 
-  public DPMusicListAdapter(Context context) {
+  public MyrillaListAdapter(Context context) {
     mContext = context;
   }
 
@@ -46,7 +46,7 @@ public class DPMusicListAdapter extends BaseAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
       convertView = LayoutInflater.from(mContext)
-          .inflate(R.layout.dpmusic_list_item, parent, false);
+          .inflate(R.layout.myrilla_list_item, parent, false);
     }
 
     TextView titleView = (TextView) convertView.findViewById(R.id.title);

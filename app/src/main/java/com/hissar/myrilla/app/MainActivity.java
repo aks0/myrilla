@@ -8,6 +8,10 @@ import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.*;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends Activity implements
     PlayerNotificationCallback, ConnectionStateCallback {
@@ -51,6 +55,30 @@ public class MainActivity extends Activity implements
         .beginTransaction()
         .add(clipboardFragment, CLIPBOARD_FRAGMENT_TAG)
         .commit();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    RestAdapter restAdapter = new RestAdapter.Builder()
+        .setEndpoint("https://api.spotify.com")
+        .build();
+
+    SpotifyService spotifyService = restAdapter.create(SpotifyService.class);
+    spotifyService.getTrack(
+        "5J4ZkQpzMUFojo1CtAZYpn",
+        new Callback<SpotifyTrack>() {
+          @Override
+          public void success(SpotifyTrack spotifyTrack, Response response) {
+            Log.d("akshay", "spotifyTrack = " + spotifyTrack);
+          }
+
+          @Override
+          public void failure(RetrofitError retrofitError) {
+            Log.d("akshay", "error = " + retrofitError);
+          }
+        });
   }
 
   @Override

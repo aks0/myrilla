@@ -44,4 +44,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.+'
     compile 'com.spotify.sdk:spotify-auth:1.0.0-beta10@aar'
     compile 'com.spotify.sdk:spotify-player:1.0.0-beta10@aar'
+    compile fileTree(dir: 'libs', include: '*.jar')
 }

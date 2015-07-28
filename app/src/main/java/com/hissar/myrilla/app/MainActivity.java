@@ -24,6 +24,7 @@ public class MainActivity extends Activity implements
   private static final int REQUEST_CODE = 1337;
 
   private Player mPlayer;
+  private MyrillaListFragment mMyrillaListFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +40,16 @@ public class MainActivity extends Activity implements
 
     AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
+    mMyrillaListFragment = (MyrillaListFragment) getFragmentManager()
+        .findFragmentById(R.id.myrilla_list_fragment);
+
     ClipboardFragment clipboardFragment = new ClipboardFragment();
     clipboardFragment.setListener(
         new ClipboardFragment.Listener() {
           @Override
           public void onNewTrack(String trackUri) {
             Log.d("akshay", "onNewTrack: trackUri = " + trackUri);
-            if (mPlayer != null) {
-              mPlayer.play(trackUri);
-            }
+            mMyrillaListFragment.maybeAddNewTrack(trackUri);
           }
         });
 

@@ -17,7 +17,7 @@ import java.util.List;
 public class MyrillaListFragment extends ListFragment {
 
   private MyrillaListAdapter mMyrillaListAdapter;
-  private List<MusicItem> mMusicItemList;
+  private List<MusicItem> mMusicItemList = new ArrayList<MusicItem>();
 
   @Override
   public View onCreateView(
@@ -31,15 +31,23 @@ public class MyrillaListFragment extends ListFragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    mMusicItemList = new ArrayList<MusicItem>();
-    mMusicItemList.add(new MusicItem("item 1", "track 1"));
-    mMusicItemList.add(new MusicItem("item 2", "track 2"));
-    mMusicItemList.add(new MusicItem("item 3", "track 3"));
-
     mMyrillaListAdapter = new MyrillaListAdapter(getActivity());
     mMyrillaListAdapter.setItemList(mMusicItemList);
 
     setListAdapter(mMyrillaListAdapter);
+  }
+
+  public void maybeAddNewTrack(String trackUri) {
+    // track is already present in the list
+    for (MusicItem musicItem : mMusicItemList) {
+      if (musicItem.trackId.equals(trackUri)) {
+        return;
+      }
+    }
+
+    MusicItem newMusicItem = new MusicItem("New Title", trackUri);
+    mMusicItemList.add(newMusicItem);
+    mMyrillaListAdapter.setItemList(mMusicItemList);
   }
 
   @Override

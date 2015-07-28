@@ -25,6 +25,7 @@ public class MyrillaListAdapter extends BaseAdapter {
 
   public void setItemList(List<MusicItem> itemList) {
     mItemList = itemList;
+    notifyDataSetChanged();
   }
 
   @Override
@@ -50,7 +51,8 @@ public class MyrillaListAdapter extends BaseAdapter {
     }
 
     TextView titleView = (TextView) convertView.findViewById(R.id.title);
-    titleView.setText("Position #" + position);
+    String text = mItemList.get(position).title + " - " + mItemList.get(position).trackId;
+    titleView.setText(text);
     return convertView;
   }
 }

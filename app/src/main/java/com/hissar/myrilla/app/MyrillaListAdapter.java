@@ -15,15 +15,18 @@ import java.util.List;
  */
 public class MyrillaListAdapter extends BaseAdapter {
 
+  private static final int MS_PER_SECOND = 1000;
+  private static final int MS_PER_MINUTE = 60 * MS_PER_SECOND;
+
   private final Context mContext;
 
-  private List<MusicItem> mItemList = new ArrayList<MusicItem>();
+  private List<SpotifyTrack> mItemList = new ArrayList<SpotifyTrack>();
 
   public MyrillaListAdapter(Context context) {
     mContext = context;
   }
 
-  public void setItemList(List<MusicItem> itemList) {
+  public void setItemList(List<SpotifyTrack> itemList) {
     mItemList = itemList;
     notifyDataSetChanged();
   }
@@ -50,9 +53,19 @@ public class MyrillaListAdapter extends BaseAdapter {
           .inflate(R.layout.myrilla_list_item, parent, false);
     }
 
-    TextView titleView = (TextView) convertView.findViewById(R.id.song_name);
-    String text = mItemList.get(position).trackId;
-    titleView.setText(text);
+    SpotifyTrack spotifyTrack = mItemList.get(position);
+
+    TextView songNameView = (TextView) convertView.findViewById(R.id.song_name);
+    songNameView.setText(spotifyTrack.name);
+
+    TextView artistView = (TextView) convertView.findViewById(R.id.artist);
+    artistView.setText(spotifyTrack.artists.get(0).name);
+
+    TextView timeView = (TextView) convertView.findViewById(R.id.time);
+    int minutes = spotifyTrack.duration_ms / MS_PER_MINUTE;
+    int seconds = (spotifyTrack.duration_ms % MS_PER_MINUTE) / MS_PER_SECOND;
+    timeView.setText(String.format("%d:%d", minutes, seconds));
+
     return convertView;
   }
 }

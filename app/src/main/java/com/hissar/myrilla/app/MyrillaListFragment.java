@@ -7,6 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +20,11 @@ import java.util.List;
  */
 public class MyrillaListFragment extends ListFragment {
 
+  private static final String SPOTIFY_ENDPOINT = "https://api.spotify.com";
+
+  private SpotifyService mSpotifyService;
   private MyrillaListAdapter mMyrillaListAdapter;
-  private List<MusicItem> mMusicItemList = new ArrayList<MusicItem>();
+  private List<SpotifyTrack> mSpotifyTracks = new ArrayList<SpotifyTrack>();
 
   @Override
   public View onCreateView(
@@ -32,29 +39,44 @@ public class MyrillaListFragment extends ListFragment {
     super.onActivityCreated(savedInstanceState);
 
     mMyrillaListAdapter = new MyrillaListAdapter(getActivity());
-    mMyrillaListAdapter.setItemList(mMusicItemList);
-
+    mMyrillaListAdapter.setItemList(mSpotifyTracks);
     setListAdapter(mMyrillaListAdapter);
+
+    RestAdapter restAdapter = new RestAdapter.Builder()
+        .setEndpoint(SPOTIFY_ENDPOINT)
+        .build();
+    mSpotifyService = restAdapter.create(SpotifyService.class);
   }
 
-  public void maybeAddNewTrack(String trackUri) {
+  public void maybeAddNewTrack(String trackId) {
     // track is already present in the list
-    for (MusicItem musicItem : mMusicItemList) {
-      if (musicItem.trackId.equals(trackUri)) {
+    for (SpotifyTrack spotifyTrack : mSpotifyTracks) {
+      if (spotifyTrack.id.equals(trackId)) {
         return;
       }
     }
 
-    MusicItem newMusicItem = new MusicItem("New Title", trackUri);
-    mMusicItemList.add(newMusicItem);
-    mMyrillaListAdapter.setItemList(mMusicItemList);
+    mSpotifyService.getTrack(
+        trackId,
+        new Callback<SpotifyTrack>() {
+          @Override
+          public void success(SpotifyTrack spotifyTrack, Response response) {
+            mSpotifyTracks.add(spotifyTrack);
+            mMyrillaListAdapter.setItemList(mSpotifyTracks);
+          }
+
+          @Override
+          public void failure(RetrofitError retrofitError) {
+            Log.d("akshay", "error = " + retrofitError);
+          }
+        });
   }
 
   @Override
   public void onListItemClick(ListView list, View view, int position, long id) {
     super.onListItemClick(list, view, position, id);
 
-    MusicItem selectedItem = (MusicItem) getListAdapter().getItem(position);
-    Log.d("akshay", "selectedItem: title = " + selectedItem.title);
+    SpotifyTrack selectedItem = (SpotifyTrack) getListAdapter().getItem(position);
+    Log.d("akshay", "selectedItem: id = " + selectedItem.id);
   }
 }

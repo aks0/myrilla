@@ -17,18 +17,18 @@ public class ClipboardFragment extends Fragment {
   public interface Listener {
 
     /**
-     * Called when a new spotify track uri is parsed from the Clipboard.
+     * Called when a new spotify track uri is parsed from the Clipboard to obtain the
+     * {@code trackId}.
      *
-     * Example format of the uri: spotify:track:5J4ZkQpzMUFojo1CtAZYpn
-     * @param trackUri
+     * Example format of the uri: 5J4ZkQpzMUFojo1CtAZYpn
+     * @param trackId
      */
-    void onNewTrack(String trackUri);
+    void onNewTrack(String trackId);
   }
 
   private static final String LABEL = "Spotify Link";
   private static final String REGEX = "^http://open\\.spotify\\.com/track/([\\d\\w\\W]+)$";
   private static final int REGEX_TRACK_ID_GROUP = 1;
-  private static final String PLAYER_URI_FORMAT = "spotify:track:%s";
 
   private Listener mListener;
 
@@ -65,9 +65,8 @@ public class ClipboardFragment extends Fragment {
     ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
     String webUri = item.getText().toString();
     String trackId = getSpotifyTrackId(webUri);
-    String trackUri = String.format(PLAYER_URI_FORMAT, trackId);
     if (mListener != null) {
-      mListener.onNewTrack(trackUri);
+      mListener.onNewTrack(trackId);
     }
   }
 

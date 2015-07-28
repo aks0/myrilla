@@ -1,16 +1,20 @@
 package com.hissar.myrilla.app;
 
+import java.util.List;
+
 /**
  * Created by akshayk on 7/26/15.
  */
 public class SpotifyTrack {
 
-  private int track_number;
-  private String type;
-  private String uri;
+  public String id;
+  public String uri;
+  public String name;
+  public int duration_ms;
+  public List<SpotifyArtist> artists;
 
   @Override
   public String toString() {
-    return track_number + " - " + type + " - " + uri;
+    return id + " - " + uri + " - " + name + " - " + artists + " - " + duration_ms;
   }
 }

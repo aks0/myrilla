@@ -9,17 +9,44 @@
     >
 
   <TextView
-      android:id="@+id/title"
-      android:layout_width="match_parent"
+      android:id="@+id/song_name"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
       android:layout_alignParentTop="true"
       android:layout_alignWithParentIfMissing="true"
       android:gravity="center_vertical"
-      android:text="Example application"
+      android:padding="10dp"
+      android:text="Kabira Kabira Kabira Kabira Kabira "
       android:textSize="16sp"
       android:textStyle="bold"
       android:textColor="@android:color/black"
+      android:ellipsize="end"
+      android:maxLines="1"
       />
 
+  <TextView
+      android:id="@+id/artist"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/song_name"
+      android:gravity="center_vertical"
+      android:paddingLeft="10dp"
+      android:text="Deepika Padukone"
+      android:textSize="14sp"
+      android:textColor="#929292"
+      />
+
+  <TextView
+      android:id="@+id/time"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/song_name"
+      android:layout_toRightOf="@id/artist"
+      android:layout_alignParentRight="true"
+      android:gravity="center_vertical"
+      android:paddingLeft="10dp"
+      android:text="3:28"
+      android:textSize="14sp"
+      android:textColor="#929292"
+      />
 </RelativeLayout>

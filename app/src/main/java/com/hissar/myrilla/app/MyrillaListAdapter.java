@@ -50,8 +50,8 @@ public class MyrillaListAdapter extends BaseAdapter {
           .inflate(R.layout.myrilla_list_item, parent, false);
     }
 
-    TextView titleView = (TextView) convertView.findViewById(R.id.title);
-    String text = mItemList.get(position).title + " - " + mItemList.get(position).trackId;
+    TextView titleView = (TextView) convertView.findViewById(R.id.song_name);
+    String text = mItemList.get(position).trackId;
     titleView.setText(text);
     return convertView;
   }

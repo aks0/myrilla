@@ -20,11 +20,17 @@ import java.util.List;
  */
 public class MyrillaListFragment extends ListFragment {
 
+  public interface Listener {
+    void onPlayTrack(SpotifyTrack spotifyTrack);
+  }
+
   private static final String SPOTIFY_ENDPOINT = "https://api.spotify.com";
 
   private SpotifyService mSpotifyService;
   private MyrillaListAdapter mMyrillaListAdapter;
+  private Listener mListener;
   private List<SpotifyTrack> mSpotifyTracks = new ArrayList<SpotifyTrack>();
+  private int mCurrentPlayingTrackIndex = -1;
 
   @Override
   public View onCreateView(
@@ -48,6 +54,10 @@ public class MyrillaListFragment extends ListFragment {
     mSpotifyService = restAdapter.create(SpotifyService.class);
   }
 
+  public void setListener(Listener listener) {
+    mListener = listener;
+  }
+
   public void maybeAddNewTrack(String trackId) {
     // track is already present in the list
     for (SpotifyTrack spotifyTrack : mSpotifyTracks) {
@@ -62,6 +72,11 @@ public class MyrillaListFragment extends ListFragment {
           @Override
           public void success(SpotifyTrack spotifyTrack, Response response) {
             mSpotifyTracks.add(spotifyTrack);
+            if (mSpotifyTracks.size() == 1) {
+              mListener.onPlayTrack(spotifyTrack);
+              mCurrentPlayingTrackIndex = 0;
+            }
+
             mMyrillaListAdapter.setItemList(mSpotifyTracks);
           }
 
@@ -70,6 +85,10 @@ public class MyrillaListFragment extends ListFragment {
             Log.d("akshay", "error = " + retrofitError);
           }
         });
+  }
+
+  public void onTrackEndEvent() {
+    mListener.onPlayTrack(mSpotifyTracks.get(++mCurrentPlayingTrackIndex));
   }
 
   @Override

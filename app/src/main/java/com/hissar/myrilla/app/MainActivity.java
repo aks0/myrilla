@@ -35,24 +35,6 @@ public class MainActivity extends Activity implements
     AuthenticationRequest request = builder.build();
 
     AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-
-    mMyrillaListFragment = (MyrillaListFragment) getFragmentManager()
-        .findFragmentById(R.id.myrilla_list_fragment);
-
-    ClipboardFragment clipboardFragment = new ClipboardFragment();
-    clipboardFragment.setListener(
-        new ClipboardFragment.Listener() {
-          @Override
-          public void onNewTrack(String trackId) {
-            Log.d("akshay", "onNewTrack: trackId = " + trackId);
-            mMyrillaListFragment.maybeAddNewTrack(trackId);
-          }
-        });
-
-    getFragmentManager()
-        .beginTransaction()
-        .add(clipboardFragment, CLIPBOARD_FRAGMENT_TAG)
-        .commit();
   }
 
   @Override
@@ -74,7 +56,8 @@ public class MainActivity extends Activity implements
           public void onInitialized(Player player) {
             mPlayer.addConnectionStateCallback(MainActivity.this);
             mPlayer.addPlayerNotificationCallback(MainActivity.this);
-            mPlayer.play("spotify:track:5J4ZkQpzMUFojo1CtAZYpn");
+            MainActivity.this.onPlayerInitialized();
+//            mPlayer.play("spotify:track:5J4ZkQpzMUFojo1CtAZYpn");
           }
 
           @Override
@@ -84,6 +67,33 @@ public class MainActivity extends Activity implements
         });
       }
     }
+  }
+
+  private void onPlayerInitialized() {
+    mMyrillaListFragment = (MyrillaListFragment) getFragmentManager()
+        .findFragmentById(R.id.myrilla_list_fragment);
+    mMyrillaListFragment.setListener(
+        new MyrillaListFragment.Listener() {
+          @Override
+          public void onPlayTrack(SpotifyTrack spotifyTrack) {
+            mPlayer.play(spotifyTrack.uri);
+          }
+        });
+
+    ClipboardFragment clipboardFragment = new ClipboardFragment();
+    clipboardFragment.setListener(
+        new ClipboardFragment.Listener() {
+          @Override
+          public void onNewTrack(String trackId) {
+            Log.d("akshay", "onNewTrack: trackId = " + trackId);
+            mMyrillaListFragment.maybeAddNewTrack(trackId);
+          }
+        });
+
+    getFragmentManager()
+        .beginTransaction()
+        .add(clipboardFragment, CLIPBOARD_FRAGMENT_TAG)
+        .commit();
   }
 
   @Override
@@ -115,6 +125,10 @@ public class MainActivity extends Activity implements
   public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
     Log.d("akshay", "Playback event received: " + eventType.name());
     switch (eventType) {
+      case END_OF_CONTEXT:
+        mMyrillaListFragment.onTrackEndEvent();
+        break;
+
       // Handle event type as necessary
       default:
         break;

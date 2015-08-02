@@ -71,6 +71,8 @@ public class MyrillaListFragment extends ListFragment {
         new Callback<SpotifyTrack>() {
           @Override
           public void success(SpotifyTrack spotifyTrack, Response response) {
+            Log.d("akshay", "fetch success: " + spotifyTrack);
+
             mSpotifyTracks.add(spotifyTrack);
             if (mSpotifyTracks.size() == 1) {
               mListener.onPlayTrack(spotifyTrack);

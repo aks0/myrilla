@@ -1,11 +1,14 @@
 package com.hissar.myrilla.app;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +22,13 @@ public class MyrillaListAdapter extends BaseAdapter {
   private static final int MS_PER_MINUTE = 60 * MS_PER_SECOND;
 
   private final Context mContext;
+  private final Picasso mPicasso;
 
   private List<SpotifyTrack> mItemList = new ArrayList<SpotifyTrack>();
 
   public MyrillaListAdapter(Context context) {
     mContext = context;
+    mPicasso = Picasso.with(mContext);
   }
 
   public void setItemList(List<SpotifyTrack> itemList) {
@@ -66,6 +71,10 @@ public class MyrillaListAdapter extends BaseAdapter {
     int seconds = (spotifyTrack.duration_ms % MS_PER_MINUTE) / MS_PER_SECOND;
     timeView.setText(String.format("%d:%d", minutes, seconds));
 
+    ImageView thumbnailView = (ImageView) convertView.findViewById(R.id.thumbnail);
+    Uri uri = Uri.parse(spotifyTrack.album.images.get(0).url);
+    mPicasso.setIndicatorsEnabled(true);
+    mPicasso.load(uri).into(thumbnailView);
     return convertView;
   }
 }

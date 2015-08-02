@@ -8,10 +8,17 @@
     android:background="@android:color/white"
     >
 
+  <ImageView
+      android:id="@+id/thumbnail"
+      android:layout_width="80dp"
+      android:layout_height="match_parent"
+      />
+
   <TextView
       android:id="@+id/song_name"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_toRightOf="@id/thumbnail"
       android:layout_alignParentTop="true"
       android:layout_alignWithParentIfMissing="true"
       android:gravity="center_vertical"
@@ -29,6 +36,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@id/song_name"
+      android:layout_toRightOf="@id/thumbnail"
       android:gravity="center_vertical"
       android:paddingLeft="10dp"
       android:text="Deepika Padukone"

@@ -12,9 +12,10 @@ public class SpotifyTrack {
   public String name;
   public int duration_ms;
   public List<SpotifyArtist> artists;
+  public SpotifyAlbum album;
 
   @Override
   public String toString() {
-    return id + " - " + uri + " - " + name + " - " + artists + " - " + duration_ms;
+    return id + " - " + uri + " - " + name + " - " + artists + " - " + duration_ms + " - " + album;
   }
 }

@@ -22,7 +22,7 @@
       android:layout_alignWithParentIfMissing="true"
       android:gravity="center_vertical"
       android:padding="10dp"
-      android:text="Kabira Kabira Kabira Kabira Kabira "
+      android:text="Add copied song to your list?"
       android:textSize="16sp"
       android:textStyle="bold"
       android:textColor="@android:color/black"

@@ -15,8 +15,6 @@ public class MainActivity extends Activity implements
   private static final String CLIENT_ID = "417ecb31de084af881bab36ec17034df";
   private static final String REDIRECT_URI = "dp-music://callback";
 
-  private static final String CLIPBOARD_FRAGMENT_TAG = "clipboard_fragment";
-
   private static final int REQUEST_CODE = 1337;
 
   private Player mPlayer;
@@ -27,6 +25,7 @@ public class MainActivity extends Activity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    hideOverlayFragment();
     AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(
         CLIENT_ID,
         AuthenticationResponse.Type.TOKEN,
@@ -80,20 +79,23 @@ public class MainActivity extends Activity implements
           }
         });
 
-    ClipboardFragment clipboardFragment = new ClipboardFragment();
-    clipboardFragment.setListener(
-        new ClipboardFragment.Listener() {
+    final MyrillaOverlayFragment myrillaOverlayFragment = (MyrillaOverlayFragment)
+        getFragmentManager().findFragmentById(R.id.myrilla_overlay_fragment);
+    myrillaOverlayFragment.setListener(
+        new MyrillaOverlayFragment.Listener() {
           @Override
-          public void onNewTrack(String trackId) {
+          public void onCopiedNewTrack(String trackId) {
             Log.d("akshay", "onNewTrack: trackId = " + trackId);
-            mMyrillaListFragment.maybeAddNewTrack(trackId);
+            if (mMyrillaListFragment.shouldAddNewTrack(trackId)) {
+              myrillaOverlayFragment.displayOverlaySuggestion(trackId);
+            }
+          }
+
+          @Override
+          public void onAddNewTrack(SpotifyTrack spotifyTrack) {
+            mMyrillaListFragment.addNewTrack(spotifyTrack);
           }
         });
-
-    getFragmentManager()
-        .beginTransaction()
-        .add(clipboardFragment, CLIPBOARD_FRAGMENT_TAG)
-        .commit();
   }
 
   @Override
@@ -149,5 +151,14 @@ public class MainActivity extends Activity implements
   protected void onDestroy() {
     Spotify.destroyPlayer(this);
     super.onDestroy();
+  }
+
+  private void hideOverlayFragment() {
+    MyrillaOverlayFragment myrillaOverlayFragment = (MyrillaOverlayFragment)
+        getFragmentManager().findFragmentById(R.id.myrilla_overlay_fragment);
+    getFragmentManager()
+        .beginTransaction()
+        .hide(myrillaOverlayFragment)
+        .commit();
   }
 }

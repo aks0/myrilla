@@ -30,9 +30,4 @@ proguard/
 *.log
 
 # IntelliJ files
-/.idea/workspace.xml
-/.idea/libraries
-/.idea/tasks.xml
-/.idea/uiDesigner.xml
-/.idea/misc.xml
-/.idea/modules.xml
+.idea

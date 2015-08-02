@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/overlay_height"
+    android:background="#0FF"
+    >
+
+  <ImageView
+      android:id="@+id/thumbnail"
+      android:layout_width="@dimen/overlay_height"
+      android:layout_height="match_parent"
+      />
+
+  <TextView
+      android:id="@+id/title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@id/thumbnail"
+      android:layout_alignParentTop="true"
+      android:layout_alignWithParentIfMissing="true"
+      android:gravity="center_vertical"
+      android:padding="10dp"
+      android:text="Kabira Kabira Kabira Kabira Kabira "
+      android:textSize="16sp"
+      android:textStyle="bold"
+      android:textColor="@android:color/black"
+      android:ellipsize="end"
+      android:maxLines="1"
+      />
+
+  <TextView
+      android:id="@+id/subtitle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/title"
+      android:layout_toRightOf="@id/thumbnail"
+      android:gravity="center_vertical"
+      android:paddingLeft="10dp"
+      android:text="Deepika Padukone"
+      android:textSize="14sp"
+      android:textColor="@android:color/black"
+      />
+</RelativeLayout>

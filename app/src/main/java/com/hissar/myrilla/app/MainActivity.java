@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import com.parse.Parse;
+import com.parse.ParseObject;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -12,8 +14,11 @@ import com.spotify.sdk.android.player.*;
 public class MainActivity extends Activity implements
     PlayerNotificationCallback, ConnectionStateCallback {
 
-  private static final String CLIENT_ID = "417ecb31de084af881bab36ec17034df";
+  private static final String SPOTIFY_CLIENT_ID = "417ecb31de084af881bab36ec17034df";
   private static final String REDIRECT_URI = "dp-music://callback";
+
+  private static final String PARSE_CLIENT_ID = "pCpf1WSUDP2AWFU99nQA5bOR2Jjq71ZbfY34HSqM";
+  private static final String PARSE_APPLICATION_ID = "fh1ToF8l7fGtAyX1lw3rJWtsPne19jrXAdmqEIXJ";
 
   private static final int REQUEST_CODE = 1337;
 
@@ -27,13 +32,22 @@ public class MainActivity extends Activity implements
 
     hideOverlayFragment();
     AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(
-        CLIENT_ID,
+        SPOTIFY_CLIENT_ID,
         AuthenticationResponse.Type.TOKEN,
         REDIRECT_URI);
     builder.setScopes(new String[]{"user-read-private", "streaming"});
     AuthenticationRequest request = builder.build();
 
     AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
+    // Enable Local Datastore.
+    Parse.enableLocalDatastore(this);
+
+    Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_ID);
+
+    ParseObject testObject = new ParseObject("TestObject");
+    testObject.put("foo", "bar");
+    testObject.saveInBackground();
   }
 
   @Override
@@ -49,7 +63,7 @@ public class MainActivity extends Activity implements
     if (requestCode == REQUEST_CODE) {
       AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
       if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-        Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
+        Config playerConfig = new Config(this, response.getAccessToken(), SPOTIFY_CLIENT_ID);
         mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
           @Override
           public void onInitialized(Player player) {

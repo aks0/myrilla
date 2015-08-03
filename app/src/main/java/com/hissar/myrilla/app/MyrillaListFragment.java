@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -39,6 +40,15 @@ public class MyrillaListFragment extends ListFragment {
 
     mMyrillaListAdapter = new MyrillaListAdapter(getActivity());
     mMyrillaListAdapter.setItemList(mSpotifyTracks);
+    getListView().setOnItemLongClickListener(
+        new AdapterView.OnItemLongClickListener() {
+          @Override
+          public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            mCurrentPlayingTrackIndex = position;
+            mListener.onPlayTrack(mSpotifyTracks.get(mCurrentPlayingTrackIndex));
+            return true;
+          }
+        });
     setListAdapter(mMyrillaListAdapter);
   }
 

@@ -1,13 +1,12 @@
 package com.hissar.myrilla.app;
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +14,16 @@ import java.util.List;
 /**
  * Created by akshayk on 7/26/15.
  */
-public class MyrillaListFragment extends ListFragment {
+public class MyrillaListFragment extends Fragment {
 
   public interface Listener {
     void onPlayTrack(SpotifyTrack spotifyTrack);
   }
 
+  private RecyclerView mRecyclerView;
   private MyrillaListAdapter mMyrillaListAdapter;
+  private LinearLayoutManager mLinearLayoutManager;
+
   private Listener mListener;
   private List<SpotifyTrack> mSpotifyTracks = new ArrayList<SpotifyTrack>();
   private int mCurrentPlayingTrackIndex = -1;
@@ -35,21 +37,37 @@ public class MyrillaListFragment extends ListFragment {
   }
 
   @Override
+  public void onViewCreated(View view, Bundle savedInstanceState) {
+    mRecyclerView = (RecyclerView) view.findViewById(R.id.myrilla_recycler_view);
+
+    // use this setting to improve performance if you know that changes
+    // in content do not change the layout size of the RecyclerView
+    mRecyclerView.setHasFixedSize(true);
+  }
+
+  @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
+    // use a linear layout manager
+    mLinearLayoutManager = new LinearLayoutManager(getActivity());
+    mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
     mMyrillaListAdapter = new MyrillaListAdapter(getActivity());
     mMyrillaListAdapter.setItemList(mSpotifyTracks);
-    getListView().setOnItemLongClickListener(
-        new AdapterView.OnItemLongClickListener() {
+    mMyrillaListAdapter.setItemClickListener(
+        new MyrillaListAdapter.ItemClickListener() {
           @Override
-          public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+          public void onCardClick(
+              View view,
+              int position,
+              MyrillaListAdapter.ViewHolder viewHolder) {
             mCurrentPlayingTrackIndex = position;
             mListener.onPlayTrack(mSpotifyTracks.get(mCurrentPlayingTrackIndex));
-            return true;
           }
         });
-    setListAdapter(mMyrillaListAdapter);
+    mRecyclerView.setAdapter(mMyrillaListAdapter);
   }
 
   public void setListener(Listener listener) {
@@ -79,13 +97,5 @@ public class MyrillaListFragment extends ListFragment {
 
   public void onTrackEndEvent() {
     mListener.onPlayTrack(mSpotifyTracks.get(++mCurrentPlayingTrackIndex));
-  }
-
-  @Override
-  public void onListItemClick(ListView list, View view, int position, long id) {
-    super.onListItemClick(list, view, position, id);
-
-    SpotifyTrack selectedItem = (SpotifyTrack) getListAdapter().getItem(position);
-    Log.d("akshay", "selectedItem: id = " + selectedItem.id);
   }
 }

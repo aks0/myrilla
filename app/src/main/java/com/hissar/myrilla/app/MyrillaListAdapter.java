@@ -2,10 +2,10 @@ package com.hissar.myrilla.app;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
@@ -16,7 +16,27 @@ import java.util.List;
 /**
  * Created by akshayk on 7/26/15.
  */
-public class MyrillaListAdapter extends BaseAdapter {
+public class MyrillaListAdapter extends RecyclerView.Adapter<MyrillaListAdapter.ViewHolder> {
+
+  public interface ItemClickListener {
+    void onCardClick(View view, int position, ViewHolder viewHolder);
+  }
+
+  public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private ItemClickListener mItemClickListener;
+
+    public ViewHolder(View itemView, ItemClickListener itemClickListener) {
+      super(itemView);
+
+      mItemClickListener = itemClickListener;
+      itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+      mItemClickListener.onCardClick(view, getPosition(), this);
+    }
+  }
 
   private static final int MS_PER_SECOND = 1000;
   private static final int MS_PER_MINUTE = 60 * MS_PER_SECOND;
@@ -25,6 +45,8 @@ public class MyrillaListAdapter extends BaseAdapter {
   private final Picasso mPicasso;
 
   private List<SpotifyTrack> mItemList = new ArrayList<SpotifyTrack>();
+
+  private ItemClickListener mItemClickListener;
 
   public MyrillaListAdapter(Context context) {
     mContext = context;
@@ -36,29 +58,22 @@ public class MyrillaListAdapter extends BaseAdapter {
     notifyDataSetChanged();
   }
 
-  @Override
-  public int getCount() {
-    return mItemList.size();
+  public void setItemClickListener(ItemClickListener itemClickListener) {
+    mItemClickListener = itemClickListener;
   }
 
   @Override
-  public Object getItem(int position) {
-    return mItemList.get(position);
+  public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+    View itemView = LayoutInflater.from(mContext)
+        .inflate(R.layout.myrilla_list_item, parent, false);
+    return new ViewHolder(itemView, mItemClickListener);
   }
 
   @Override
-  public long getItemId(int position) {
-    return position;
-  }
-
-  @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
-    if (convertView == null) {
-      convertView = LayoutInflater.from(mContext)
-          .inflate(R.layout.myrilla_list_item, parent, false);
-    }
-
+  public void onBindViewHolder(ViewHolder viewHolder, int position) {
     SpotifyTrack spotifyTrack = mItemList.get(position);
+
+    View convertView = viewHolder.itemView;
 
     TextView songNameView = (TextView) convertView.findViewById(R.id.song_name);
     songNameView.setText(spotifyTrack.name);
@@ -75,6 +90,15 @@ public class MyrillaListAdapter extends BaseAdapter {
     Uri uri = Uri.parse(spotifyTrack.album.images.get(0).url);
     mPicasso.setIndicatorsEnabled(true);
     mPicasso.load(uri).into(thumbnailView);
-    return convertView;
+  }
+
+  @Override
+  public long getItemId(int position) {
+    return position;
+  }
+
+  @Override
+  public int getItemCount() {
+    return mItemList.size();
   }
 }

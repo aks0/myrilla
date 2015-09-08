@@ -10,32 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Created by akshayk on 7/26/15.
+ * Adapter for the list displayed to the user
  */
 public class MyrillaListAdapter extends RecyclerView.Adapter<MyrillaListAdapter.ViewHolder> {
 
   public interface ItemClickListener {
     void onCardClick(View view, int position, ViewHolder viewHolder);
-  }
-
-  public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private ItemClickListener mItemClickListener;
-
-    public ViewHolder(View itemView, ItemClickListener itemClickListener) {
-      super(itemView);
-
-      mItemClickListener = itemClickListener;
-      itemView.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-      mItemClickListener.onCardClick(view, getPosition(), this);
-    }
   }
 
   private static final int MS_PER_SECOND = 1000;
@@ -44,17 +25,17 @@ public class MyrillaListAdapter extends RecyclerView.Adapter<MyrillaListAdapter.
   private final Context mContext;
   private final Picasso mPicasso;
 
-  private List<SpotifyTrack> mItemList = new ArrayList<SpotifyTrack>();
-
+  private DataSource mDataSource;
   private ItemClickListener mItemClickListener;
 
   public MyrillaListAdapter(Context context) {
     mContext = context;
     mPicasso = Picasso.with(mContext);
+    mDataSource = DataSource.getInstance();
   }
 
-  public void setItemList(List<SpotifyTrack> itemList) {
-    mItemList = itemList;
+  public void onDataSourceUpdated() {
+    mDataSource = DataSource.getInstance();
     notifyDataSetChanged();
   }
 
@@ -71,7 +52,7 @@ public class MyrillaListAdapter extends RecyclerView.Adapter<MyrillaListAdapter.
 
   @Override
   public void onBindViewHolder(ViewHolder viewHolder, int position) {
-    SpotifyTrack spotifyTrack = mItemList.get(position);
+    SpotifyTrack spotifyTrack = mDataSource.get(position);
 
     View convertView = viewHolder.itemView;
 
@@ -99,6 +80,22 @@ public class MyrillaListAdapter extends RecyclerView.Adapter<MyrillaListAdapter.
 
   @Override
   public int getItemCount() {
-    return mItemList.size();
+    return mDataSource.size();
+  }
+
+  public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private ItemClickListener itemClickListener;
+
+    public ViewHolder(View itemView, ItemClickListener itemClickListener) {
+      super(itemView);
+
+      this.itemClickListener = itemClickListener;
+      itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+      itemClickListener.onCardClick(view, getPosition(), this);
+    }
   }
 }

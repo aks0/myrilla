@@ -8,15 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Created by akshayk on 7/26/15.
+ * Fragment to display the list of tracks in the queue.
  */
 public class MyrillaListFragment extends Fragment {
 
   public interface Listener {
+
     void onPlayTrack(SpotifyTrack spotifyTrack);
   }
 
@@ -25,8 +23,7 @@ public class MyrillaListFragment extends Fragment {
   private LinearLayoutManager mLinearLayoutManager;
 
   private Listener mListener;
-  private List<SpotifyTrack> mSpotifyTracks = new ArrayList<SpotifyTrack>();
-  private int mCurrentPlayingTrackIndex = -1;
+  private DataSource mDataSource;
 
   @Override
   public View onCreateView(
@@ -55,7 +52,6 @@ public class MyrillaListFragment extends Fragment {
     mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
     mMyrillaListAdapter = new MyrillaListAdapter(getActivity());
-    mMyrillaListAdapter.setItemList(mSpotifyTracks);
     mMyrillaListAdapter.setItemClickListener(
         new MyrillaListAdapter.ItemClickListener() {
           @Override
@@ -63,11 +59,16 @@ public class MyrillaListFragment extends Fragment {
               View view,
               int position,
               MyrillaListAdapter.ViewHolder viewHolder) {
-            mCurrentPlayingTrackIndex = position;
-            mListener.onPlayTrack(mSpotifyTracks.get(mCurrentPlayingTrackIndex));
+            SpotifyTrack nextTrackToPlay = mDataSource.get(position);
+            if (mDataSource.canPlay(nextTrackToPlay)) {
+              mDataSource.setCurrentPlay(nextTrackToPlay);
+              mListener.onPlayTrack(nextTrackToPlay);
+            }
           }
         });
     mRecyclerView.setAdapter(mMyrillaListAdapter);
+
+    mDataSource = DataSource.getInstance();
   }
 
   public void setListener(Listener listener) {
@@ -76,7 +77,7 @@ public class MyrillaListFragment extends Fragment {
 
   public boolean shouldAddNewTrack(String trackId) {
     // track is already present in the list
-    for (SpotifyTrack spotifyTrack : mSpotifyTracks) {
+    for (SpotifyTrack spotifyTrack : mDataSource) {
       if (spotifyTrack.id.equals(trackId)) {
         return false;
       }
@@ -86,16 +87,16 @@ public class MyrillaListFragment extends Fragment {
   }
 
   public void addNewTrack(SpotifyTrack spotifyTrack) {
-    mSpotifyTracks.add(spotifyTrack);
-    if (mSpotifyTracks.size() == 1) {
-      mListener.onPlayTrack(spotifyTrack);
-      mCurrentPlayingTrackIndex = 0;
-    }
+    mDataSource.add(spotifyTrack);
+    mMyrillaListAdapter.onDataSourceUpdated();
 
-    mMyrillaListAdapter.setItemList(mSpotifyTracks);
+    if (mDataSource.size() == 1 && mDataSource.canPlay(spotifyTrack)) {
+      mListener.onPlayTrack(spotifyTrack);
+      mDataSource.setCurrentPlay(spotifyTrack);
+    }
   }
 
   public void onTrackEndEvent() {
-    mListener.onPlayTrack(mSpotifyTracks.get(++mCurrentPlayingTrackIndex));
+    mListener.onPlayTrack(mDataSource.getPlayNext());
   }
 }

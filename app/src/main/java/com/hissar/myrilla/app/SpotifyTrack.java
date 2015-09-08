@@ -18,4 +18,19 @@ public class SpotifyTrack {
   public String toString() {
     return id + " - " + uri + " - " + name + " - " + artists + " - " + duration_ms + " - " + album;
   }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof SpotifyTrack)) {
+      return false;
+    }
+
+    SpotifyTrack spotifyTrack = (SpotifyTrack) object;
+    return id.equals(spotifyTrack.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
 }

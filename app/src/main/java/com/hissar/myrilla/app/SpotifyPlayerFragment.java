@@ -48,6 +48,10 @@ public class SpotifyPlayerFragment extends Fragment
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
+    initAuthentication();
+  }
+
+  private void initAuthentication() {
     AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(
         SPOTIFY_CLIENT_ID,
         AuthenticationResponse.Type.TOKEN,
@@ -60,11 +64,15 @@ public class SpotifyPlayerFragment extends Fragment
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode != REQUEST_CODE_AUTHENTICATION) {
-      super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == REQUEST_CODE_AUTHENTICATION) {
+      initPlayer(resultCode, data);
       return;
     }
 
+    super.onActivityResult(requestCode, resultCode, data);
+  }
+
+  private void initPlayer(int resultCode, Intent data) {
     AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
     if (response.getType() != AuthenticationResponse.Type.TOKEN) {
       return;

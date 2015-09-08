@@ -89,6 +89,12 @@ public class SpotifyPlayerFragment extends Fragment
   }
 
   @Override
+  public void onDestroy() {
+    Spotify.destroyPlayer(this);
+    super.onDestroy();
+  }
+
+  @Override
   public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
     Log.d("akshay", "Playback event received: " + eventType.name());
     switch (eventType) {

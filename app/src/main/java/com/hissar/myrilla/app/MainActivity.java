@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import com.parse.Parse;
 import com.parse.ParseObject;
-import com.spotify.sdk.android.player.Spotify;
 
 public class MainActivity extends Activity {
 
@@ -82,12 +81,6 @@ public class MainActivity extends Activity {
             mMyrillaListFragment.addNewTrack(spotifyTrack);
           }
         });
-  }
-
-  @Override
-  protected void onDestroy() {
-    Spotify.destroyPlayer(this);
-    super.onDestroy();
   }
 
   private void hideOverlayFragment() {

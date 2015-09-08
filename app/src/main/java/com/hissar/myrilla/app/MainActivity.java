@@ -54,6 +54,11 @@ public class MainActivity extends Activity {
   }
 
   private void onPlayerInitialized() {
+    initListFragment();
+    initOverlayFragment();
+  }
+
+  private void initListFragment() {
     mMyrillaListFragment = (MyrillaListFragment) getFragmentManager()
         .findFragmentById(R.id.myrilla_list_fragment);
     mMyrillaListFragment.setListener(
@@ -63,7 +68,9 @@ public class MainActivity extends Activity {
             mSpotifyPlayerFragment.playTrack(spotifyTrack.uri);
           }
         });
+  }
 
+  private void initOverlayFragment() {
     final MyrillaOverlayFragment myrillaOverlayFragment = (MyrillaOverlayFragment)
         getFragmentManager().findFragmentById(R.id.myrilla_overlay_fragment);
     myrillaOverlayFragment.setListener(

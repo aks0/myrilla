@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * Controller fragment to manage the data copied to the clipboard by other applications.
  */
-public class ClipboardFragment extends Fragment {
+public class ClipboardControllerFragment extends Fragment {
 
   public interface Listener {
 

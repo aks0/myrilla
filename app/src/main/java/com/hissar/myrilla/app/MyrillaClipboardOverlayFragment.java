@@ -19,7 +19,7 @@ import retrofit.client.Response;
 /**
  * Fragment to display the overlay on the list about the recently copied song.
  */
-public class MyrillaOverlayFragment extends Fragment {
+public class MyrillaClipboardOverlayFragment extends Fragment {
 
   public interface Listener {
 
@@ -39,7 +39,7 @@ public class MyrillaOverlayFragment extends Fragment {
   }
 
   private static final String SPOTIFY_ENDPOINT = "https://api.spotify.com";
-  private static final String CLIPBOARD_FRAGMENT_TAG = "clipboard_fragment";
+  private static final String CLIPBOARD_CONTROLLER_FRAGMENT_TAG = "clipboard_controller_fragment";
 
   private Picasso mPicasso;
   private SpotifyService mSpotifyService;
@@ -56,7 +56,7 @@ public class MyrillaOverlayFragment extends Fragment {
       LayoutInflater inflater,
       @Nullable ViewGroup container,
       Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.myrilla_overlay_fragment, container, false);
+    return inflater.inflate(R.layout.myrilla_clipboard_overlay_fragment, container, false);
   }
 
   @Override
@@ -107,9 +107,9 @@ public class MyrillaOverlayFragment extends Fragment {
   }
 
   private void initClipboard() {
-    ClipboardFragment clipboardFragment = new ClipboardFragment();
-    clipboardFragment.setListener(
-        new ClipboardFragment.Listener() {
+    ClipboardControllerFragment clipboardControllerFragment = new ClipboardControllerFragment();
+    clipboardControllerFragment.setListener(
+        new ClipboardControllerFragment.Listener() {
           @Override
           public void onNewTrack(String trackId) {
             Log.d("akshay", "onNewTrack: trackId = " + trackId);
@@ -121,7 +121,7 @@ public class MyrillaOverlayFragment extends Fragment {
 
     getChildFragmentManager()
         .beginTransaction()
-        .add(clipboardFragment, CLIPBOARD_FRAGMENT_TAG)
+        .add(clipboardControllerFragment, CLIPBOARD_CONTROLLER_FRAGMENT_TAG)
         .commit();
   }
 

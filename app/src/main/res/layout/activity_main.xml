@@ -16,8 +16,8 @@
       />
 
   <fragment
-      android:name="com.hissar.myrilla.app.MyrillaOverlayFragment"
-      android:id="@+id/myrilla_overlay_fragment"
+      android:name="com.hissar.myrilla.app.MyrillaClipboardOverlayFragment"
+      android:id="@+id/myrilla_clipboard_overlay_fragment"
       android:layout_width="match_parent"
       android:layout_height="@dimen/overlay_height"
       android:layout_gravity="bottom"

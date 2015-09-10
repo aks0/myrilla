@@ -71,15 +71,16 @@ public class MainActivity extends Activity {
   }
 
   private void initOverlayFragment() {
-    final MyrillaOverlayFragment myrillaOverlayFragment = (MyrillaOverlayFragment)
-        getFragmentManager().findFragmentById(R.id.myrilla_overlay_fragment);
-    myrillaOverlayFragment.setListener(
-        new MyrillaOverlayFragment.Listener() {
+    final MyrillaClipboardOverlayFragment myrillaClipboardOverlayFragment =
+        (MyrillaClipboardOverlayFragment) getFragmentManager()
+            .findFragmentById(R.id.myrilla_clipboard_overlay_fragment);
+    myrillaClipboardOverlayFragment.setListener(
+        new MyrillaClipboardOverlayFragment.Listener() {
           @Override
           public void onCopiedNewTrack(String trackId) {
             Log.d("akshay", "onNewTrack: trackId = " + trackId);
             if (mMyrillaListFragment.shouldAddNewTrack(trackId)) {
-              myrillaOverlayFragment.displayOverlaySuggestion(trackId);
+              myrillaClipboardOverlayFragment.displayOverlaySuggestion(trackId);
             }
           }
 
@@ -91,11 +92,12 @@ public class MainActivity extends Activity {
   }
 
   private void hideOverlayFragment() {
-    MyrillaOverlayFragment myrillaOverlayFragment = (MyrillaOverlayFragment)
-        getFragmentManager().findFragmentById(R.id.myrilla_overlay_fragment);
+    MyrillaClipboardOverlayFragment myrillaClipboardOverlayFragment =
+        (MyrillaClipboardOverlayFragment) getFragmentManager()
+            .findFragmentById(R.id.myrilla_clipboard_overlay_fragment);
     getFragmentManager()
         .beginTransaction()
-        .hide(myrillaOverlayFragment)
+        .hide(myrillaClipboardOverlayFragment)
         .commit();
   }
 

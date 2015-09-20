@@ -97,9 +97,14 @@ public class MainActivity extends Activity {
           }
 
           @Override
-          public void onPlay() {
+          public void onPlay(String trackUri) {
             if (mMyrillaPlayerOverlayFragment == null) {
               initPlayerOverlayFragment();
+            }
+
+            SpotifyTrack spotifyTrack = DataSource.getInstance().get(trackUri);
+            if (spotifyTrack != null) {
+              mMyrillaPlayerOverlayFragment.onPlay(spotifyTrack);
             }
           }
         });

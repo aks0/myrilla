@@ -1,6 +1,7 @@
 package com.hissar.myrilla.app;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.*;
 
@@ -68,6 +69,22 @@ public class DataSource implements Collection<SpotifyTrack> {
 
   public SpotifyTrack get(int index) {
     return mSpotifyTrackList.get(index);
+  }
+
+  /**
+   * Gets the {@link SpotifyTrack} from the given {@code trackUri}.
+   * @param trackUri
+   * @return the track for the given Uri and null otherwise
+   */
+  @Nullable
+  public SpotifyTrack get(String trackUri) {
+    for (SpotifyTrack spotifyTrack : mSpotifyTrackList) {
+      if (spotifyTrack.uri.equals(trackUri)) {
+        return spotifyTrack;
+      }
+    }
+
+    return null;
   }
 
   @Override

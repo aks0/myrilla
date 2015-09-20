@@ -29,8 +29,10 @@ public class SpotifyPlayerFragment extends Fragment
 
     /**
      * Called when the spotify player {@link Player} has resumed playback.
+     *
+     * @param trackUri the Uri of the current song that started playing
      */
-    void onPlay();
+    void onPlay(String trackUri);
   }
 
   public static final int REQUEST_CODE_AUTHENTICATION = 1337;
@@ -111,8 +113,10 @@ public class SpotifyPlayerFragment extends Fragment
   public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
     Log.d("akshay", "Playback event received: " + eventType.name());
     switch (eventType) {
+      case TRACK_CHANGED:
+        // Intentional fall-through to keep play state as same.
       case PLAY:
-        mListener.onPlay();
+        mListener.onPlay(playerState.trackUri);
         break;
       case END_OF_CONTEXT:
         mListener.onTrackEnd();

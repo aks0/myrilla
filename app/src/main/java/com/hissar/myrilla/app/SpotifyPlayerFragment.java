@@ -26,6 +26,11 @@ public class SpotifyPlayerFragment extends Fragment
      * Called when the current playing track has ended.
      */
     void onTrackEnd();
+
+    /**
+     * Called when the spotify player {@link Player} has resumed playback.
+     */
+    void onPlay();
   }
 
   public static final int REQUEST_CODE_AUTHENTICATION = 1337;
@@ -106,6 +111,9 @@ public class SpotifyPlayerFragment extends Fragment
   public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
     Log.d("akshay", "Playback event received: " + eventType.name());
     switch (eventType) {
+      case PLAY:
+        mListener.onPlay();
+        break;
       case END_OF_CONTEXT:
         mListener.onTrackEnd();
         break;

@@ -16,13 +16,15 @@ public class MainActivity extends Activity {
 
   private MyrillaListFragment mMyrillaListFragment;
   private SpotifyPlayerFragment mSpotifyPlayerFragment;
+  private MyrillaPlayerOverlayFragment mMyrillaPlayerOverlayFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    hideOverlayFragment();
+    hidePlayerOverlayFragment();
+    hideClipboardOverlayFragment();
     testParse();
     initSpotifyPlayerFragment();
   }
@@ -55,7 +57,7 @@ public class MainActivity extends Activity {
 
   private void onPlayerInitialized() {
     initListFragment();
-    initOverlayFragment();
+    initClipboardOverlayFragment();
   }
 
   private void initListFragment() {
@@ -68,37 +70,6 @@ public class MainActivity extends Activity {
             mSpotifyPlayerFragment.playTrack(spotifyTrack.uri);
           }
         });
-  }
-
-  private void initOverlayFragment() {
-    final MyrillaClipboardOverlayFragment myrillaClipboardOverlayFragment =
-        (MyrillaClipboardOverlayFragment) getFragmentManager()
-            .findFragmentById(R.id.myrilla_clipboard_overlay_fragment);
-    myrillaClipboardOverlayFragment.setListener(
-        new MyrillaClipboardOverlayFragment.Listener() {
-          @Override
-          public void onCopiedNewTrack(String trackId) {
-            Log.d("akshay", "onNewTrack: trackId = " + trackId);
-            if (mMyrillaListFragment.shouldAddNewTrack(trackId)) {
-              myrillaClipboardOverlayFragment.displayOverlaySuggestion(trackId);
-            }
-          }
-
-          @Override
-          public void onAddNewTrack(SpotifyTrack spotifyTrack) {
-            mMyrillaListFragment.addNewTrack(spotifyTrack);
-          }
-        });
-  }
-
-  private void hideOverlayFragment() {
-    MyrillaClipboardOverlayFragment myrillaClipboardOverlayFragment =
-        (MyrillaClipboardOverlayFragment) getFragmentManager()
-            .findFragmentById(R.id.myrilla_clipboard_overlay_fragment);
-    getFragmentManager()
-        .beginTransaction()
-        .hide(myrillaClipboardOverlayFragment)
-        .commit();
   }
 
   private void initSpotifyPlayerFragment() {
@@ -124,6 +95,81 @@ public class MainActivity extends Activity {
           public void onTrackEnd() {
             mMyrillaListFragment.onTrackEndEvent();
           }
+
+          @Override
+          public void onPlay() {
+            if (mMyrillaPlayerOverlayFragment == null) {
+              initPlayerOverlayFragment();
+            }
+          }
         });
+  }
+
+  private void initPlayerOverlayFragment() {
+    mMyrillaPlayerOverlayFragment = (MyrillaPlayerOverlayFragment) getFragmentManager()
+        .findFragmentById(R.id.myrilla_player_overlay_fragment);
+    mMyrillaPlayerOverlayFragment.setListener(
+        new MyrillaPlayerOverlayFragment.Listener() {
+          @Override
+          public void onPlayClick() {
+
+          }
+
+          @Override
+          public void onPauseClick() {
+
+          }
+
+          @Override
+          public void onNextClick() {
+
+          }
+        });
+
+    getFragmentManager()
+        .beginTransaction()
+        .show(mMyrillaPlayerOverlayFragment)
+        .commit();
+  }
+
+  private void initClipboardOverlayFragment() {
+    final MyrillaClipboardOverlayFragment myrillaClipboardOverlayFragment =
+        (MyrillaClipboardOverlayFragment) getFragmentManager()
+            .findFragmentById(R.id.myrilla_clipboard_overlay_fragment);
+    myrillaClipboardOverlayFragment.setListener(
+        new MyrillaClipboardOverlayFragment.Listener() {
+          @Override
+          public void onCopiedNewTrack(String trackId) {
+            Log.d("akshay", "onNewTrack: trackId = " + trackId);
+            if (mMyrillaListFragment.shouldAddNewTrack(trackId)) {
+              myrillaClipboardOverlayFragment.displayOverlaySuggestion(trackId);
+            }
+          }
+
+          @Override
+          public void onAddNewTrack(SpotifyTrack spotifyTrack) {
+            mMyrillaListFragment.addNewTrack(spotifyTrack);
+          }
+        });
+  }
+
+  private void hidePlayerOverlayFragment() {
+    MyrillaPlayerOverlayFragment myrillaPlayerOverlayFragment =
+        (MyrillaPlayerOverlayFragment) getFragmentManager()
+            .findFragmentById(R.id.myrilla_player_overlay_fragment);
+    getFragmentManager()
+        .beginTransaction()
+        .hide(myrillaPlayerOverlayFragment)
+        .commit();
+  }
+
+  private void hideClipboardOverlayFragment() {
+    MyrillaClipboardOverlayFragment myrillaClipboardOverlayFragment =
+        (MyrillaClipboardOverlayFragment) getFragmentManager()
+            .findFragmentById(R.id.myrilla_clipboard_overlay_fragment);
+    getFragmentManager()
+        .beginTransaction()
+        .hide(myrillaClipboardOverlayFragment)
+        .commit();
   }
 }

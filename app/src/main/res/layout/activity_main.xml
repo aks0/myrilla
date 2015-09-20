@@ -15,12 +15,25 @@
       android:padding="16dp"
       />
 
-  <fragment
-      android:name="com.hissar.myrilla.app.MyrillaClipboardOverlayFragment"
-      android:id="@+id/myrilla_clipboard_overlay_fragment"
+  <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="@dimen/overlay_height"
+      android:layout_height="wrap_content"
       android:layout_gravity="bottom"
-      />
+      android:orientation="vertical"
+      >
 
+    <fragment
+        android:name="com.hissar.myrilla.app.MyrillaPlayerOverlayFragment"
+        android:id="@+id/myrilla_player_overlay_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/overlay_height"
+        />
+
+    <fragment
+        android:name="com.hissar.myrilla.app.MyrillaClipboardOverlayFragment"
+        android:id="@+id/myrilla_clipboard_overlay_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/overlay_height"
+        />
+  </LinearLayout>
 </FrameLayout>

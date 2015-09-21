@@ -97,6 +97,10 @@ public class MyrillaListFragment extends Fragment {
   }
 
   public void onTrackEndEvent() {
+    if (!mDataSource.canPlayNext()) {
+      return;
+    }
+
     mListener.onPlayTrack(mDataSource.getPlayNext());
   }
 }

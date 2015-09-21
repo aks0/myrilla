@@ -26,6 +26,12 @@ public class MyrillaPlayerOverlayFragment extends Fragment {
   private Picasso mPicasso;
   private Listener mListener;
 
+  private boolean mIsTrackPlaying;
+  private TextView mSongName;
+  private TextView mArtistName;
+  private ImageView mThumbnailView;
+  private ImageView mMediaButton;
+
   public void setListener(Listener listener) {
     mListener = listener;
   }
@@ -41,18 +47,44 @@ public class MyrillaPlayerOverlayFragment extends Fragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     mPicasso = Picasso.with(getActivity());
+
+    mSongName = (TextView) view.findViewById(R.id.title);
+    mArtistName = (TextView) view.findViewById(R.id.subtitle);
+    mThumbnailView = (ImageView) view.findViewById(R.id.thumbnail);
+    mMediaButton = (ImageView) view.findViewById(R.id.media_actions);
+
+    mMediaButton.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            if (mIsTrackPlaying) {
+              mListener.onPauseClick();
+            } else {
+              mListener.onPlayClick();
+            }
+          }
+        });
   }
 
   public void onPlay(SpotifyTrack spotifyTrack) {
-    TextView songNameView = (TextView) getView().findViewById(R.id.title);
-    songNameView.setText(spotifyTrack.name);
+    setUpOverlay(spotifyTrack, true);
+  }
 
-    TextView artistView = (TextView) getView().findViewById(R.id.subtitle);
-    artistView.setText(spotifyTrack.artists.get(0).name);
+  public void onPause(SpotifyTrack spotifyTrack) {
+    setUpOverlay(spotifyTrack, false);
+  }
 
-    ImageView thumbnailView = (ImageView) getView().findViewById(R.id.thumbnail);
+  private void setUpOverlay(SpotifyTrack spotifyTrack, boolean isTrackPlaying) {
+    mIsTrackPlaying = isTrackPlaying;
+
+    mSongName.setText(spotifyTrack.name);
+    mArtistName.setText(spotifyTrack.artists.get(0).name);
+
     Uri uri = Uri.parse(spotifyTrack.album.images.get(0).url);
     mPicasso.setIndicatorsEnabled(true);
-    mPicasso.load(uri).into(thumbnailView);
+    mPicasso.load(uri).into(mThumbnailView);
+
+    mMediaButton.setImageResource(
+        isTrackPlaying ? R.drawable.ic_pause_black_36dp : R.drawable.ic_play_arrow_black_36dp);
   }
 }

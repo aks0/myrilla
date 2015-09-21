@@ -33,6 +33,13 @@ public class SpotifyPlayerFragment extends Fragment
      * @param trackUri the Uri of the current song that started playing
      */
     void onPlay(String trackUri);
+
+    /**
+     * Called when the spotify player {@link Player} has paused playback.
+     *
+     * @param trackUri the Uri of the current song that got paused
+     */
+    void onPause(String trackUri);
   }
 
   public static final int REQUEST_CODE_AUTHENTICATION = 1337;
@@ -51,6 +58,38 @@ public class SpotifyPlayerFragment extends Fragment
     mPlayer.play(trackUri);
   }
 
+  public void resumePlay() {
+    mPlayer.resume();
+    mPlayer.getPlayerState(
+        new PlayerStateCallback() {
+          @Override
+          public void onPlayerState(PlayerState playerState) {
+            mListener.onPlay(playerState.trackUri);
+          }
+        });
+  }
+
+  public void pausePlay() {
+    mPlayer.pause();
+    mPlayer.getPlayerState(
+        new PlayerStateCallback() {
+          @Override
+          public void onPlayerState(PlayerState playerState) {
+            mListener.onPause(playerState.trackUri);
+          }
+        });
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == REQUEST_CODE_AUTHENTICATION) {
+      initPlayer(resultCode, data);
+      return;
+    }
+
+    super.onActivityResult(requestCode, resultCode, data);
+  }
+
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -67,16 +106,6 @@ public class SpotifyPlayerFragment extends Fragment
     AuthenticationRequest request = builder.build();
 
     AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE_AUTHENTICATION, request);
-  }
-
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == REQUEST_CODE_AUTHENTICATION) {
-      initPlayer(resultCode, data);
-      return;
-    }
-
-    super.onActivityResult(requestCode, resultCode, data);
   }
 
   private void initPlayer(int resultCode, Intent data) {
@@ -117,6 +146,9 @@ public class SpotifyPlayerFragment extends Fragment
         // Intentional fall-through to keep play state as same.
       case PLAY:
         mListener.onPlay(playerState.trackUri);
+        break;
+      case PAUSE:
+        mListener.onPause(playerState.trackUri);
         break;
       case END_OF_CONTEXT:
         mListener.onTrackEnd();

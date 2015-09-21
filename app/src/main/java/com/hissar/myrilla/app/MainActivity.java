@@ -107,6 +107,18 @@ public class MainActivity extends Activity {
               mMyrillaPlayerOverlayFragment.onPlay(spotifyTrack);
             }
           }
+
+          @Override
+          public void onPause(String trackUri) {
+            if (mMyrillaPlayerOverlayFragment == null) {
+              initPlayerOverlayFragment();
+            }
+
+            SpotifyTrack spotifyTrack = DataSource.getInstance().get(trackUri);
+            if (spotifyTrack != null) {
+              mMyrillaPlayerOverlayFragment.onPause(spotifyTrack);
+            }
+          }
         });
   }
 
@@ -117,12 +129,12 @@ public class MainActivity extends Activity {
         new MyrillaPlayerOverlayFragment.Listener() {
           @Override
           public void onPlayClick() {
-
+            mSpotifyPlayerFragment.resumePlay();
           }
 
           @Override
           public void onPauseClick() {
-
+            mSpotifyPlayerFragment.pausePlay();
           }
 
           @Override
